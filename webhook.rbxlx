@@ -1,0 +1,91 @@
+<roblox version="4">
+  <Item class="ReplicatedStorage" referent="0">
+    <Properties>
+      <string name="Name">ReplicatedStorage</string>
+    </Properties>
+    <Item class="Folder" referent="1">
+      <Properties>
+        <string name="Name">Shared</string>
+      </Properties>
+      <Item class="ModuleScript" referent="2">
+        <Properties>
+          <string name="Name">Webhook</string>
+          <string name="Source">local http = game:GetService("HttpService")
+
+local Webhook = {}
+Webhook.__index = Webhook
+
+function Webhook.new(url: string)
+	return setmetatable({
+		link = tostring(url),
+	}, Webhook)
+end
+
+function Webhook:Post(content: string)
+	http:PostAsync(
+		self.link,
+		http:JSONEncode({
+			content = tostring(content),
+			wait = true,
+		})
+	)
+end
+
+return Webhook</string>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="ServerScriptService" referent="3">
+    <Properties>
+      <string name="Name">ServerScriptService</string>
+    </Properties>
+    <Item class="Folder" referent="4">
+      <Properties>
+        <string name="Name">Server</string>
+      </Properties>
+      <Item class="Script" referent="5">
+        <Properties>
+          <string name="Name">Test</string>
+          <token name="RunContext">0</token>
+          <string name="Source"><![CDATA[local rps = game:GetService("ReplicatedStorage")
+local plrs = game:GetService("Players")
+
+local shared = rps.Shared
+
+local webhook = require(shared.Webhook).new(
+	"https://discord.com/api/webhooks/1263784321022427247/g0taKCnXQnankOGzkd9PgZLXM6wsVsJa0cu0W_kZyY_fE5Luf9k5YcMZaE_YOOW-HsuH"
+)
+
+plrs.PlayerAdded:Connect(function(plr)
+  webhook:Post(string.format("Player @%s(%s) connected to game with %d UserId", plr.DisplayName, plr.Name, plr.UserId))
+end)
+
+]]></string>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="StarterPlayer" referent="6">
+    <Properties>
+      <string name="Name">StarterPlayer</string>
+    </Properties>
+    <Item class="StarterPlayerScripts" referent="7">
+      <Properties>
+        <string name="Name">StarterPlayerScripts</string>
+      </Properties>
+      <Item class="Folder" referent="8">
+        <Properties>
+          <string name="Name">Client</string>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+  <Item class="Workspace" referent="9">
+    <Properties>
+      <string name="Name">Workspace</string>
+      <bool name="FilteringEnabled">true</bool>
+      <bool name="NeedsPivotMigration">false</bool>
+    </Properties>
+  </Item>
+</roblox>
